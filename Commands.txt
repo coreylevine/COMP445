@@ -1,0 +1,9 @@
+GET requests
+
+httpc.py --get "http://httpbin.org/get?course=networking&assignment=1"
+httpc.py --get "http://httpbin.org/get?course=networking&assignment=1" -v
+
+POST requests
+
+httpc.py --post "http://httpbin.org/post" --h "Content-Type: application/json" --d "{'Assignment': 1}"
+httpc.py --post "http://httpbin.org/post" --h "Content-Type: application/json" --d "{'Assignment': 1}" -v
