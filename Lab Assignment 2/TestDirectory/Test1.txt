@@ -1,8 +1,0 @@
-OST /Test1.txt HTTP/1.1
-Host: localhost:8080
-User-Agent: curl/7.58.0
-Accept: */*
-Content-Length: 5
-Content-Type: application/x-www-form-urlencoded
-
-Test2

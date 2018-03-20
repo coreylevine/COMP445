@@ -1,0 +1,22 @@
+Server commands:
+
+1. Start server:
+    //Default settings
+    httpfs.py
+    //Specific port
+    httpfs.py -p 8888
+    //Specific directory
+    httpfs.py -d TestDirectory
+    //Print debugging messages
+    httpfs.py -v
+
+2. Client side:
+    //Get all files
+    curl -get localhost:8080/
+    //Get contents in a file
+    curl -get localhost:8080/file1.txt
+    //Rewrite file
+    curl -post -d "test1" localhost:8080/file1.txt
+    //Create a new file
+    curl -post -d "test2" localhost:8080/file2.txt
+

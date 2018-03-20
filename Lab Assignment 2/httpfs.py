@@ -5,7 +5,7 @@ import os
 #Parse arguments for simple file server
 parser = argparse.ArgumentParser()
 
-parser.add_argument('-v', help = 'Prints debubgging messages.', type = str)
+parser.add_argument('-v', help = 'Prints debubgging messages.', action='store_true')
 parser.add_argument('-p', help = 'Specifies the port number that the server will listen and serve at. Default is 8080', type = int)
 parser.add_argument('-d', help = 'Specifies the directory that the server will use to read/write requested '
                                  'files. Default is the current directory when launching the application.', type = str)
@@ -39,14 +39,16 @@ serverSocket.listen(1)
 
 def getGETorPOST(clientRequest):
     clientRequest = clientRequest.split('\r\n')
+    print(clientRequest)
     getOrPostHeader = clientRequest[0].split()
+    print(getOrPostHeader)
     return getOrPostHeader
 
 def getData(clientRequest):
-    dataLines = clientRequest.index('')
-    data = ""
-    for dataLine in clientRequest[dataLines + 1:]:
-        data += dataLine
+    dataLines = clientRequest.split('\r\n\r\n')
+    data = ''
+    for line in dataLines[1]:
+        data += line
     return data
 
 def getFunction(path):
@@ -67,18 +69,18 @@ def getFunction(path):
             getResponse = "This file does not exist or cannot be found in the current directory."
     return getResponse
 
-def postFunction(path, clientRequest):
+def postFunction(path, data):
     postResponse = ''
     # If the file is in the directory, write to the file. Otherwise, return an error code.
     if path[1:] in filesInDirectory:
         thisFile = open(directory + path, 'w')
-        thisData = getData(clientRequest)
+        thisData = data
         thisFile.write(thisData)
         thisFile.close()
         postResponse = "Writing to existing file."
     else:
         thisFile = open(directory + path, 'w')
-        thisData = getData(clientRequest)
+        thisData = data
         thisFile.write(thisData)
         thisFile.close()
         postResponse = "writing to new file."
@@ -101,7 +103,7 @@ while True:
     if getOrPost == 'GET':
         requestResponse = getFunction(path)
     elif getOrPost == 'POST':
-        requestResponse = postFunction(path, clientRequest)
+        requestResponse = postFunction(path, data)
     #Send the response
     connection.sendall(bytes(requestResponse, "utf-8"))
     connection.close()
