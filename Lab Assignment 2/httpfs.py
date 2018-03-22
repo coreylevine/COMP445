@@ -36,7 +36,6 @@ serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 serverSocket.bind(('', port))
 serverSocket.listen(1)
-print("serving HTTP on port", port)
 def getGETorPOST(clientRequest):
     clientRequest = clientRequest.split('\r\n')
     print(clientRequest)
@@ -54,19 +53,15 @@ def getData(clientRequest):
 def getFunction(path):
     #We are in the current directory
     getResponse = ""
-    if path.endswith("/"):
-        filesInDirectory = os.listdir(directory + path)
+    if path=="/":
         #display all files in the directory
         for file in filesInDirectory:
             getResponse += file + '\n'
     #We are in a file
     else:
         #display the file contents
-        filesInDirectory = os.listdir(directory)
         if path[1:] in filesInDirectory:
-            print(path[1:5])
             thisFile = open(directory + path, 'r')
-            print(directory + path)
             getResponse = thisFile.read()
             thisFile.close()
         else:
@@ -109,9 +104,6 @@ while True:
     elif getOrPost == 'POST':
         requestResponse = postFunction(path, data)
     #Send the response
-    print("PATH: " + path)
-    print("dir : " + directory)
-    print("REQ: " + requestResponse)
     connection.sendall(bytes(requestResponse, "utf-8"))
     connection.close()
 
