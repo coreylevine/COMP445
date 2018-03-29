@@ -36,7 +36,6 @@ serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 serverSocket.bind(('', port))
 serverSocket.listen(1)
-
 def getGETorPOST(clientRequest):
     clientRequest = clientRequest.split('\r\n')
     getOrPostHeader = clientRequest[0].split()
@@ -52,7 +51,7 @@ def getData(clientRequest):
 def getFunction(path):
     #We are in the current directory
     getResponse = ""
-    if path == "/":
+    if path=="/":
         #display all files in the directory
         for file in filesInDirectory:
             getResponse += file + '\n'
@@ -68,7 +67,7 @@ def getFunction(path):
     return getResponse
 
 def postFunction(path, data):
-    postResponse = ''
+    postResponse = path[1]
     # If the file is in the directory, write to the file. Otherwise, return an error code.
     if path[1:] in filesInDirectory:
         thisFile = open(directory + path, 'w')
