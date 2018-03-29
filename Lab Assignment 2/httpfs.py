@@ -39,9 +39,7 @@ serverSocket.listen(1)
 
 def getGETorPOST(clientRequest):
     clientRequest = clientRequest.split('\r\n')
-    print(clientRequest)
     getOrPostHeader = clientRequest[0].split()
-    print(getOrPostHeader)
     return getOrPostHeader
 
 def getData(clientRequest):
@@ -90,7 +88,7 @@ def postFunction(path, data):
 
 while True:
     connection, address = serverSocket.accept()
-    clientRequest = connection.recv(4096).decode("utf-8")
+    clientRequest = connection.recv(1024).decode("utf-8")
     #Decode to get GET or POST
     getOrPostHeader = getGETorPOST(clientRequest)
     getOrPost = getOrPostHeader[0]
@@ -105,6 +103,7 @@ while True:
     elif getOrPost == 'POST':
         requestResponse = postFunction(path, data)
     #Send the response
+    print(requestResponse)
     connection.sendall(bytes(requestResponse, "utf-8"))
     connection.close()
 
