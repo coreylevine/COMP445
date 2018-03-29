@@ -1,0 +1,6 @@
+To start:
+Go to the directory that the p2pchat.py is in and run the following command:
+
+docker run --rm -it -v $PWD:/run -w /run -u $UID centos/python-35-centos7 /bin/bash
+
+Run the program by writing 'python p2pchat.py'
