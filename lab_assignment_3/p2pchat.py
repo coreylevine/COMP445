@@ -3,14 +3,23 @@ import os
 import threading
 from datetime import datetime
 
+class ChatRoom(object):
+    def __init__(self):
+        self.listOfUsers = []
+
+    def newUser(self, user):
+        self.listOfUsers.append(user)
+
+    def getUsers(self):
+        return self.listOfUsers
+
 def buildMessage(username, command, userMessage):
     return username + "\n" + command + "\n" + userMessage
 
 def joinUserToConversation(s, username, ip, port):
     command = 'join'
     joinMessage = buildMessage(username, command, '')
-    global listOfUsers
-    listOfUsers += [username]
+    chatRoom.newUser(username)
     s.sendto(joinMessage.encode('utf-8'), (ip, port))
 
 def readCommands(s, username, ip, port):
@@ -25,13 +34,12 @@ def readCommands(s, username, ip, port):
             command = 'leave'
             read = False
         if userInput == '/who':
-            print('The users in the conversation are: ', listOfUsers)
+            print('The users in the conversation are: ', chatRoom.getUsers())
         else:
             appMessage = buildMessage(username, command, userInput)
             s.sendto(appMessage.encode('utf-8'), (ip, port))
 
 def receiveMessage(s):
-    global listOfUsers
     running = True
     while running:
         applicationMessage = s.recv(4096)
@@ -40,7 +48,7 @@ def receiveMessage(s):
             print(datetime.now(), ' [', user, ']: ', userMessage)
         if command == 'join':
             print(datetime.now(), user, 'Joined successfully!')
-            listOfUsers += [user]
+            chatRoom.newUser(user)
         if command == 'leave':
             print(datetime.now(), user, " has left the conversation.")
         if command == 'quit':
@@ -71,11 +79,11 @@ def receiver(username, ip, port):
     #Receive message
     receiveMessage(s)
 
+chatRoom = ChatRoom()
 quitReceiver = False
-listOfUsers = []
 name = input('Please enter your name: ')
 peers = os.fork()
 if peers == 0:
     receiver(name, '', 1996)
 else:
-    sender(name, '<broadcast>', 1996)
+    sender(name, '255.255.255.255', 1996)
